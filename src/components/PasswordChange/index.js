@@ -1,6 +1,6 @@
 import React from "react";
 
-const PasswordChange = () => {
+const PasswordChangePage = () => {
   return (
     <div>
       <h1>PasswordChange1</h1>
@@ -8,4 +8,4 @@ const PasswordChange = () => {
   );
 };
 
-export default PasswordChange;
+export default PasswordChangePage;
