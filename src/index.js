@@ -3,16 +3,15 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./components/App/index";
-import FirebaseContext from "./components/Firebase/context";
-import Firebase from "./components/Firebase";
 import reportWebVitals from "./reportWebVitals";
+import { AuthContextProvider } from "./components/contexts/AuthContext";
 
 ReactDOM.render(
-  <FirebaseContext.Provider value={new Firebase()}>
+  <AuthContextProvider>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </FirebaseContext.Provider>,
+  </AuthContextProvider>,
   document.getElementById("root")
 );
 
