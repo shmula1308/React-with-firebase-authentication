@@ -1,10 +1,10 @@
 import React, { useRef, useContext, useState } from "react";
 import AuthContext from "../contexts/AuthContext";
 import { firebaseApp } from "../Firebase/firebase";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const SignInPage = () => {
-  const auth = useContext(AuthContext);
+  const authCtx = useContext(AuthContext);
   const emailRef = useRef();
   const passwordRef = useRef();
   const [error, setError] = useState();
@@ -21,20 +21,31 @@ const SignInPage = () => {
     try {
       setError("");
       setLoading(true);
-      const userCredentials = await auth.signUp(email, password);
-      console.log(userCredentials);
+
+      const auth = getAuth(firebaseApp);
+
+      const userCredentials = await authCtx.signUp(auth, email, password);
+      //console.log("currentUser signed in", authCtx.currentUser);
+      console.log("userCredentials", userCredentials);
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
-        return setError("Email already in use");
+        setError("Email already in use");
+      } else {
+        setError("Unable to login");
       }
-      setError("Unable to login");
     }
     setLoading(false);
-    console.log(auth.currentUser.email);
+  };
+
+  const logoutHandler = () => {
+    const auth = getAuth(firebaseApp);
+    authCtx.signOut(auth);
   };
   return (
     <div>
       <h1>SignIn1</h1>
+      <div>{authCtx.currentUser && authCtx.currentUser.email}</div>
+      {/* When we refresh our page authCtx.currentUser === null. Firebase set localstorage for you, sets tokens to verify if you have a user already signed in. But we have an initial loading state until onAuthStateChanged runs and set the current user*/}
       {error && <div>{error}</div>}
       <form onSubmit={onSubmitHandler}>
         <label htmlFor='email'>Email</label>
@@ -45,6 +56,9 @@ const SignInPage = () => {
           Sig Up
         </button>
       </form>
+      <button type='submit' onClick={logoutHandler}>
+        Logout
+      </button>
     </div>
   );
 };
