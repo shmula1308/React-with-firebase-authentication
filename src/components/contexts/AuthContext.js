@@ -11,16 +11,31 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 
-const AuthContext = React.createContext({});
+const AuthContext = React.createContext({
+  currentUser: null,
+  signUp: () => {},
+  signIn: () => {},
+  signOut: () => {},
+  resetPassword: () => {},
+  updatePass: () => {},
+});
 
 export const AuthContextProvider = (props) => {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState(null);
 
   const signUp = (auth, email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
   const signIn = (auth, email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const resetPassword = (auth, email) => {
+    return sendPasswordResetEmail(auth, email);
+  };
+
+  const updatePass = (password) => {
+    return updatePassword(password);
   };
 
   useEffect(() => {
@@ -30,10 +45,11 @@ export const AuthContextProvider = (props) => {
         setCurrentUser(user);
         console.log(`You have logged in as ${user.email}`);
       } else {
+        setCurrentUser(null);
         console.log("You have logged out");
       }
     });
-    return unsubscribe;
+    return unsubscribe; // this is a method that we call in order to remove the listener onAuthStateChanged after it runs, so that we can attach a new listener
   }, []);
 
   return (
@@ -42,7 +58,9 @@ export const AuthContextProvider = (props) => {
         currentUser,
         signUp,
         signIn,
-        signOut: signOut,
+        signOut,
+        resetPassword,
+        updatePass,
       }}>
       {props.children}
     </AuthContext.Provider>

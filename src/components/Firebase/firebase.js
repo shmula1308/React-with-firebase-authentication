@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 // Importing firebase services. Each firebase service followes a similar pattern
 // Import service from its path. Import service getter function. Each subpackage has a getter function, But you must initialize your firebase app first before calling any service getter function.
@@ -15,6 +15,7 @@ const firebaseConfig = {
 };
 
 export const firebaseApp = initializeApp(firebaseConfig); // firebase instance that stores the firbase configuarion. This instance knows how to connect to your specific firebase backend
+export const auth = getAuth(firebaseApp);
 
 // Learn about security rules and app check
 // here --> https://firebase.google.com/docs/rules

@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../contexts/AuthContext";
+import { SIGN_IN } from "../../constants/routes";
+import { auth } from "../Firebase/firebase";
 
-const SignOutPage = () => {
+const SignOutButton = () => {
+  const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const signOutHandler = () => {
+    authCtx.signOut(auth);
+    navigate(SIGN_IN, { replace: true });
+  };
   return (
-    <div>
-      <h1>SignOut1</h1>
-    </div>
+    <button type='button' onClick={signOutHandler}>
+      Sign Out
+    </button>
   );
 };
 
-export default SignOutPage;
+export default SignOutButton;
