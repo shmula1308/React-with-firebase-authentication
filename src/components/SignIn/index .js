@@ -4,7 +4,7 @@ import AuthContext from "../contexts/AuthContext";
 import { auth } from "../Firebase/firebase";
 // import { getAuth } from "firebase/auth";
 
-import { SIGN_UP, HOME } from "../../constants/routes";
+import { SIGN_UP, HOME, PASSWORD_FORGET } from "../../constants/routes";
 
 //  Find a better way to disable button and handle errors so it doesnt cause an error. Try the useEffect as suggested
 const SignInPage = () => {
@@ -60,6 +60,9 @@ const SignInPage = () => {
         {error && <div>{error}</div>}
         <p>
           Don't have an account? <Link to={SIGN_UP}>Sign Up</Link>
+        </p>
+        <p>
+          <Link to={PASSWORD_FORGET}>Forgot Password?</Link>
         </p>
       </form>
     </div>

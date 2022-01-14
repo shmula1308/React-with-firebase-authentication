@@ -5,11 +5,14 @@ import { ACCOUNT, ADMIN, SIGN_UP, SIGN_IN, LANDING, HOME, PASSWORD_FORGET } from
 import LandingPage from "../Landing/index";
 import SignUpPage from "../SignUp/index";
 import SignInPage from "../SignIn/index ";
-import PassworForgetPage from "../PasswordForget/index";
+import PasswordForgetPage from "../PasswordForget/index";
 import HomePage from "../Home/index";
 import AccountPage from "../Account/index";
 import AdminPage from "../Admin/index";
 import Navigation from "../Navigation";
+
+import ProtectedRoute from "../ProtectedRoutes/ProtectedRoute";
+import IsUserAuthenticated from "../ProtectedRoutes/IsUserAuthenticated";
 
 //SDK stands for Software development kit
 
@@ -26,12 +29,48 @@ const App = () => {
       {/* Navigation contains <Link/> components that point to="/a-path". Once clicked Route component sbelow render a certain page that matches that path */}
       <Routes>
         <Route path={LANDING} element={<LandingPage />} />
-        <Route path={SIGN_UP} element={<SignUpPage />} />
-        <Route path={SIGN_IN} element={<SignInPage />} />
-        <Route path={PASSWORD_FORGET} element={<PassworForgetPage />} />
-        <Route path={HOME} element={<HomePage />} />
-        <Route path={ACCOUNT} element={<AccountPage />} />
-        <Route path={ADMIN} element={<AdminPage />} />
+        <Route
+          path={SIGN_UP}
+          element={
+            <IsUserAuthenticated>
+              <SignUpPage />
+            </IsUserAuthenticated>
+          }
+        />
+        <Route
+          path={SIGN_IN}
+          element={
+            <IsUserAuthenticated>
+              <SignInPage />
+            </IsUserAuthenticated>
+          }
+        />
+        <Route path={PASSWORD_FORGET} element={<PasswordForgetPage />} />
+        <Route
+          path={HOME}
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ACCOUNT}
+          element={
+            <ProtectedRoute>
+              <AccountPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ADMIN}
+          element={
+            <ProtectedRoute>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path='*' element={<p>No exist</p>} />
       </Routes>
     </div>
   );
