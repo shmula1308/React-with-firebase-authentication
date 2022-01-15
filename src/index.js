@@ -5,13 +5,16 @@ import "./index.css";
 import App from "./components/App/index";
 import reportWebVitals from "./reportWebVitals";
 import { AuthContextProvider } from "./components/contexts/AuthContext";
+import { DBContextProvider } from "./components/contexts/DBContext";
 
 ReactDOM.render(
-  <AuthContextProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </AuthContextProvider>,
+  <DBContextProvider>
+    <AuthContextProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AuthContextProvider>
+  </DBContextProvider>,
   document.getElementById("root")
 );
 

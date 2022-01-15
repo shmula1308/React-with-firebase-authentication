@@ -1,12 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import { getDatabase } from "firebase/database";
+import { db } from "../Firebase/firebase";
+import { set, ref, onValue } from "firebase/database";
 
-const AuthContext = React.createContext({});
+const DBContext = React.createContext({
+  writeUserData: () => {},
+  readAllUsers: () => {},
+});
 
 export const DBContextProvider = (props) => {
-    
-  return <DBContext.Provider value={{}}>{props.children}</DBContext.Provider>;
+  const writeUserData = (userId, fullName, email) => {
+    set(ref(db, "users/" + userId), {
+      username: fullName,
+      email: email,
+    });
+  };
+  const readAllUsers = () => {
+    const users = ref(db, "users");
+    return users;
+  };
+  // Using set() overwrites data at the specified location, including any child nodes.
+
+  return <DBContext.Provider value={{ writeUserData, readAllUsers }}>{props.children}</DBContext.Provider>;
 };
 
 export default DBContext;

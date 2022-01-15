@@ -1,13 +1,14 @@
 import React, { useRef, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
-import { firebaseApp } from "../Firebase/firebase";
-import { getAuth } from "firebase/auth";
+import DBContext from "../contexts/DBContext";
+import { auth } from "../Firebase/firebase";
 
 import { HOME } from "../../constants/routes";
 
 const SignUpPage = () => {
   const authCtx = useContext(AuthContext);
+  const DatabaseCtx = useContext(DBContext);
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmationRef = useRef();
@@ -36,9 +37,8 @@ const SignUpPage = () => {
       setError("");
       setLoading(true);
 
-      const auth = getAuth(firebaseApp);
-
       const userCredentials = await authCtx.signUp(auth, email, passwordOne);
+      DatabaseCtx.writeUserData(userCredentials.user.uid, fullName, email);
       setLoading(false);
       navigate(HOME, { replace: true }); // replace:true means redirect instead of a push [no more useHistory in react router v6]. You can alos pass in numbers to navigate(-1) --> one page back/ navigate(2) ---> two pages forward. Redirecting programmatically
       // console.log("currentUser signed in", authCtx.currentUser);

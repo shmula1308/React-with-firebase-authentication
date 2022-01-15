@@ -10,8 +10,6 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 
-import {} from "firebase/database";
-
 const AuthContext = React.createContext({
   currentUser: null,
   signUp: () => {},

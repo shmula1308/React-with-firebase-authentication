@@ -1,7 +1,7 @@
 import React from "react";
 import SignOutButton from "../SignOut";
 import { Link } from "react-router-dom";
-import { ACCOUNT, LANDING, HOME } from "../../constants/routes";
+import { ACCOUNT, LANDING, HOME, ADMIN } from "../../constants/routes";
 
 const NavigationAuth = () => {
   return (
@@ -15,6 +15,9 @@ const NavigationAuth = () => {
         </li>
         <li>
           <Link to={ACCOUNT}>Account</Link>
+        </li>
+        <li>
+          <Link to={ADMIN}>Admin</Link>
         </li>
         <li>
           <SignOutButton />
