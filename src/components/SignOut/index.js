@@ -10,6 +10,7 @@ const SignOutButton = () => {
 
   const signOutHandler = () => {
     authCtx.signOut(auth);
+    localStorage.removeItem("authUser");
     navigate(SIGN_IN, { replace: true });
   };
   return (

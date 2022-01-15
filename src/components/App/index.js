@@ -70,7 +70,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path='*' element={<p>No exist</p>} />
+        <Route path='*' element={<p>Resource does not exist</p>} />
       </Routes>
     </div>
   );

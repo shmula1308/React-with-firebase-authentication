@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { auth } from "../Firebase/firebase";
+import DBContext from "./DBContext";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -9,6 +10,7 @@ import {
   updatePassword,
   sendEmailVerification,
 } from "firebase/auth";
+import { onValue } from "firebase/database";
 
 const AuthContext = React.createContext({
   currentUser: null,
@@ -20,7 +22,8 @@ const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = (props) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("authUser")));
+  const databaseCtx = useContext(DBContext);
 
   const signUp = (auth, email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -37,11 +40,42 @@ export const AuthContextProvider = (props) => {
     return updatePassword(user, password);
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-        console.log(`You have logged in as ${user.email}`);
+  useEffect(async () => {
+    const unsubscribe = await onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        // get the user that got authenticated/signedUp
+        // databaseCtx.getSingleUser(user.uid).then((snapshot) => {
+        //   let dbUser = snapshot.val();
+        //   console.log(user);
+        //   // if (!dbUser.roles) {
+        //   //   dbUser.roles = {};
+        //   // }
+        //   const authUser = {
+        //     uid: user.uid,
+        //     ...dbUser,
+        //   };
+        //   console.log(`You have logged in as ${authUser.username}`);
+        //   console.log(dbUser);
+        //   setCurrentUser(authUser);
+        // });
+        const dbUserRef = databaseCtx.getSingleUser(authUser.uid);
+        onValue(dbUserRef, (snapshot) => {
+          const dbUser = snapshot.val();
+          if (!dbUser.roles) {
+            dbUser.roles = {};
+          }
+
+          authUser = {
+            uid: authUser.uid,
+            ...dbUser,
+          };
+
+          localStorage.setItem("authUser", JSON.stringify(authUser));
+
+          setCurrentUser(authUser);
+          console.log("You have been signed in as" + " " + authUser.username);
+          console.log(dbUser);
+        });
       } else {
         setCurrentUser(null);
         console.log("You have logged out");
