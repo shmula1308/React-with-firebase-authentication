@@ -10,14 +10,13 @@ const DBContext = React.createContext({
 });
 
 export const DBContextProvider = (props) => {
-  const writeUserData = (userId, fullName, email, roles) => {
+  const writeUserData = (userId, fullName, email) => {
     // Using set() overwrites data at the specified location, including any child nodes.
     // Since Firebase is essentially a schema-less JSON structure, which is an important part of dynamic real-time data, there is no way to store an empty object/array/null value.
 
     set(ref(db, "users/" + userId), {
       username: fullName,
       email: email,
-      roles,
     });
   };
   const readAllUsers = () => {

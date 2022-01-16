@@ -4,6 +4,7 @@ import AuthContext from "../contexts/AuthContext";
 import DBContext from "../contexts/DBContext";
 import { auth } from "../Firebase/firebase";
 
+import { sendEmailVerification } from "firebase/auth";
 import { HOME } from "../../constants/routes";
 import { ADMIN } from "../../constants/roles";
 
@@ -47,6 +48,8 @@ const SignUpPage = () => {
       setLoading(true);
 
       const userCredentials = await authCtx.signUp(auth, email, passwordOne);
+      // await sendEmailVerification(auth.currentUser); // not sure how and when this should run
+      // console.log("email verification sent");
 
       // Write also the signed up user in the database so we can have access to them
       DatabaseCtx.writeUserData(userCredentials.user.uid, fullName, email, roles);

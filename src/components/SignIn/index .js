@@ -2,7 +2,8 @@ import React, { useRef, useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
 import { auth } from "../Firebase/firebase";
-// import { getAuth } from "firebase/auth";
+//import { setPersistence, inMemoryPersistence } from "firebase/auth";
+import SignInWithGoogle from "./SignInWithGoogle";
 
 import { SIGN_UP, HOME, PASSWORD_FORGET } from "../../constants/routes";
 
@@ -16,6 +17,7 @@ const SignInPage = () => {
 
   const [error, setError] = useState(); // disabled on button was causing an error -->  Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
   const [loading, setLoading] = useState(false);
+
   const onSubmitHandler = async (ev) => {
     ev.preventDefault();
     const email = emailRef.current.value.trim();
@@ -28,9 +30,14 @@ const SignInPage = () => {
     try {
       setError("");
       setLoading(true);
-      const userCredentials = await authCtx.signIn(auth, email, password);
+      //await setPersistence(auth, inMemoryPersistence); // you define this if you want NO session persistence
+      await authCtx.signIn(auth, email, password); // returns userCredentials
+      //You can also get the currently signed-in user by using the currentUser property. If a user isn't signed in, currentUser is null: const auth = getAuth();
+      // const user = auth.currentUser;
+      const user = auth.currentUser;
+      console.log("Currently signed in user", user);
       setLoading(false);
-      navigate(HOME, { replace: true });
+      navigate(HOME);
     } catch (error) {
       if (error.code === "auth/wrong-password") {
         setError("Wrong Password");
@@ -65,6 +72,7 @@ const SignInPage = () => {
           <Link to={PASSWORD_FORGET}>Forgot Password?</Link>
         </p>
       </form>
+      <SignInWithGoogle />
     </div>
   );
 };

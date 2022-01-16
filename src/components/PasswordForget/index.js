@@ -2,7 +2,7 @@ import React, { useRef, useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
 import { auth } from "../Firebase/firebase";
-// import { getAuth } from "firebase/auth";
+import {} from "firebase/auth";
 
 import { SIGN_IN } from "../../constants/routes";
 
@@ -40,6 +40,24 @@ const PasswordForgetPage = () => {
     }
   };
 
+  const deleteAccountHandler = async () => {
+    try {
+      await authCtx.deleteAccount(auth.currentUser);
+      console.log(`User deleted ${auth.currentUser.email}`);
+    } catch (error) {
+      if (error.code === "auth/requires-recent-login") {
+        authCtx.askUserToSignInAgain(); // this is  the easy way out alternatively const credential = promptForCredentials() and once they do run: ALSO dont forget to cleanup the local storage once they delete their account
+        // reauthenticateWithCredential(user, credential).then(() => {
+        //   // User re-authenticated.
+        // }).catch((error) => {
+        //   // An error ocurred
+        //   // ...
+        // });
+        // then they can delete their account
+      }
+    }
+  };
+
   return (
     <div>
       <h1>Reset Your Password</h1>
@@ -51,6 +69,9 @@ const PasswordForgetPage = () => {
         </button>
         {error && <div>{error}</div>}
       </form>
+      <button type='button' onClick={deleteAccountHandler}>
+        Delete my account
+      </button>
     </div>
   );
 };
