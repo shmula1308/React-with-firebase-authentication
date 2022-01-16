@@ -4,6 +4,7 @@ import AuthContext from "../contexts/AuthContext";
 import { auth } from "../Firebase/firebase";
 //import { setPersistence, inMemoryPersistence } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
+import SignInWithFacebook from "./SignInWithFacebook";
 
 import { SIGN_UP, HOME, PASSWORD_FORGET } from "../../constants/routes";
 
@@ -73,6 +74,7 @@ const SignInPage = () => {
         </p>
       </form>
       <SignInWithGoogle />
+      <SignInWithFacebook />
     </div>
   );
 };

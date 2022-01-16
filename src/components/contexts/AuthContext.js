@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { auth, googleProvider } from "../Firebase/firebase";
+import { auth, googleProvider, facebookProvider } from "../Firebase/firebase";
 import DBContext from "./DBContext";
 import {
   onAuthStateChanged,
@@ -23,6 +23,7 @@ const AuthContext = React.createContext({
   deleteAccount: () => {},
   askUserToSignInAgain: () => {},
   signInWithGoogle: () => {},
+  signInWithFacebook: () => {},
 });
 
 export const AuthContextProvider = (props) => {
@@ -50,6 +51,10 @@ export const AuthContextProvider = (props) => {
 
   const signInWithGoogle = () => {
     return signInWithPopup(auth, googleProvider);
+  };
+
+  const signInWithFacebook = () => {
+    return signInWithPopup(auth, facebookProvider);
   };
 
   const askUserToSignInAgain = () => {
@@ -112,6 +117,7 @@ export const AuthContextProvider = (props) => {
         deleteAccount,
         askUserToSignInAgain,
         signInWithGoogle,
+        signInWithFacebook,
       }}>
       {props.children}
     </AuthContext.Provider>
