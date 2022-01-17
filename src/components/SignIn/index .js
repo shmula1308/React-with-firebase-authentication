@@ -5,8 +5,16 @@ import { auth } from "../Firebase/firebase";
 //import { setPersistence, inMemoryPersistence } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
 import SignInWithFacebook from "./SignInWithFacebook";
-
+import SignInWithTwitter from "./SignInWithTwitter";
 import { SIGN_UP, HOME, PASSWORD_FORGET } from "../../constants/routes";
+
+const ERROR_CODE_ACCOUNT_EXISTS = "auth/account-exists-with-different-credential";
+const ERROR_MSG_ACCOUNT_EXISTS = `
+  An account with an E-Mail address to
+  this social account already exists. Try to login from
+  this account instead and associate your social accounts on
+  your personal account page.
+`;
 
 //  Find a better way to disable button and handle errors so it doesnt cause an error. Try the useEffect as suggested
 const SignInPage = () => {
@@ -44,6 +52,8 @@ const SignInPage = () => {
         setError("Wrong Password");
       } else if (error.code === "auth/user-not-found") {
         setError("User not found");
+      } else if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+        setError(ERROR_MSG_ACCOUNT_EXISTS);
       } else {
         setError("Unable to login");
       }
@@ -75,6 +85,7 @@ const SignInPage = () => {
       </form>
       <SignInWithGoogle />
       <SignInWithFacebook />
+      <SignInWithTwitter />
     </div>
   );
 };

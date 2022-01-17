@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
 // Importing firebase services. Each firebase service followes a similar pattern
@@ -20,6 +20,7 @@ export const firebaseApp = initializeApp(firebaseConfig); // firebase instance t
 export const auth = getAuth(firebaseApp); // username and passwort authentication
 export const googleProvider = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();
+export const twitterProvider = new TwitterAuthProvider();
 export const db = getDatabase(firebaseApp); // To read or write data from the database, you need an instance of firebase.database.Reference
 
 // Learn about security rules and app check

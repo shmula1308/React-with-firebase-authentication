@@ -7,6 +7,13 @@ import { auth } from "../Firebase/firebase";
 import { sendEmailVerification } from "firebase/auth";
 import { HOME } from "../../constants/routes";
 import { ADMIN } from "../../constants/roles";
+const ERROR_CODE_ACCOUNT_EXISTS = "auth/account-exists-with-different-credential";
+const ERROR_MSG_ACCOUNT_EXISTS = `
+  An account with an E-Mail address to
+  this social account already exists. Try to login from
+  this account instead and associate your social accounts on
+  your personal account page.
+`;
 
 const SignUpPage = () => {
   const authCtx = useContext(AuthContext);
@@ -62,6 +69,8 @@ const SignUpPage = () => {
         setError("Email already in use");
       } else if (error.code === "auth/invalid-email") {
         setError("Invalid Email");
+      } else if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+        setError(ERROR_MSG_ACCOUNT_EXISTS);
       } else {
         setError("Unable to login");
       }
