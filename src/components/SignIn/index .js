@@ -44,7 +44,6 @@ const SignInPage = () => {
       //You can also get the currently signed-in user by using the currentUser property. If a user isn't signed in, currentUser is null: const auth = getAuth();
       // const user = auth.currentUser;
       const user = auth.currentUser;
-      console.log("Currently signed in user", user);
       setLoading(false);
       navigate(HOME);
     } catch (error) {

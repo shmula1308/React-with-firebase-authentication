@@ -3,6 +3,10 @@ import { useState } from "react/cjs/react.development";
 import { fetchSignInMethodsForEmail, linkWithPopup, unlink } from "firebase/auth";
 import * as Firebase from "../Firebase/firebase";
 import AuthContext from "../contexts/AuthContext";
+import SocialLoginToggle from "./SocialLoginToggle";
+
+//  The purpose of this component is:
+// You can allow users to sign in to your app using multiple authentication providers by linking auth provider credentials to an existing user account. Users are identifiable by the same Firebase user ID regardless of the authentication provider they used to sign in. For example, a user who signed in with a password can link a Google account and sign in with either method in the future. Or, an anonymous user can link a Facebook account and then, later, sign in with Facebook to continue using your app.
 
 const SIGN_IN_METHODS = [
   {
@@ -68,19 +72,14 @@ const SignInManagement = (props) => {
           const onlyOneLeft = activeSignInMethods.length === 1;
           return (
             <li key={signInMethod.id}>
-              {isEnabled ? (
-                <button
-                  disabled={onlyOneLeft}
-                  onClick={() => {
-                    onUnlink(signInMethod.id);
-                  }}>
-                  Deactivate {signInMethod.id}
-                </button>
-              ) : (
-                <button type='button' onClick={() => onSocialLoginLink(signInMethod.provider)}>
-                  {signInMethod.id}
-                </button>
-              )}
+              {
+                <SocialLoginToggle
+                  isEnabled={isEnabled}
+                  onlyOneLeft={onlyOneLeft}
+                  onLink={onSocialLoginLink}
+                  onUnlink={onUnlink}
+                />
+              }
             </li>
           );
         })}
