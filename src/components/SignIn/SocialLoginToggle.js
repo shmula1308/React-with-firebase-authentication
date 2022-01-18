@@ -1,7 +1,7 @@
 import React from "react";
 
 const SocialLoginToggle = ({ onlyOneLeft, isEnabled, signInMethod, onLink, onUnlink }) => {
-  isEnabled ? (
+  return isEnabled ? (
     <button
       disabled={onlyOneLeft}
       onClick={() => {
