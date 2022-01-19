@@ -55,11 +55,12 @@ const SignUpPage = () => {
       setLoading(true);
 
       const userCredentials = await authCtx.signUp(auth, email, passwordOne);
-      // await sendEmailVerification(auth.currentUser); // not sure how and when this should run
-      // console.log("email verification sent");
+      authCtx.verifyUsersEmail();
+      console.log("email verification sent");
 
       // Write also the signed up user in the database so we can have access to them
       DatabaseCtx.writeUserData(userCredentials.user.uid, fullName, email, roles);
+      console.log(roles);
       setLoading(false);
       navigate(HOME, { replace: true }); // replace:true means redirect instead of a push [no more useHistory in react router v6]. You can alos pass in numbers to navigate(-1) --> one page back/ navigate(2) ---> two pages forward. Redirecting programmatically
       // console.log("currentUser signed in", authCtx.currentUser);

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
 import DBContext from "../contexts/DBContext";
 import { HOME } from "../../constants/routes";
+import { getRoles } from "@testing-library/react";
 
 const SignInWithGoogle = () => {
   const [error, setError] = useState(null);
@@ -12,6 +13,7 @@ const SignInWithGoogle = () => {
 
   const onSubmitHandler = async (ev) => {
     ev.preventDefault();
+    let roles = {};
     try {
       const socialAuthUser = await authCtx.signInWithGoogle();
       console.log(socialAuthUser);
@@ -19,7 +21,8 @@ const SignInWithGoogle = () => {
       databaseCtx.writeUserData(
         socialAuthUser.user.uid,
         socialAuthUser.user.displayName,
-        socialAuthUser.user.email
+        socialAuthUser.user.email,
+        roles
       );
       navigate(HOME);
     } catch (error) {

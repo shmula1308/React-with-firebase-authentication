@@ -10,6 +10,7 @@ import {
   updatePassword,
   deleteUser,
   signInWithPopup,
+  sendEmailVerification,
 } from "firebase/auth";
 import { onValue } from "firebase/database";
 
@@ -25,6 +26,7 @@ const AuthContext = React.createContext({
   signInWithGoogle: () => {},
   signInWithFacebook: () => {},
   signInWithTwitter: () => {},
+  verifyUsersEmail: () => {},
 });
 
 export const AuthContextProvider = (props) => {
@@ -34,6 +36,13 @@ export const AuthContextProvider = (props) => {
   const signUp = (auth, email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
+
+  const verifyUsersEmail = () => {
+    return sendEmailVerification(auth.currentUser, {
+      url: process.env.REACT_APP_CONFIRMATION_EMAIL_REDIRECT,
+    });
+  };
+
   const signIn = (auth, email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
@@ -69,35 +78,29 @@ export const AuthContextProvider = (props) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
-        // get the user that got authenticated/signedUp
-        // databaseCtx.getSingleUser(user.uid).then((snapshot) => {
-        //   let dbUser = snapshot.val();
-        //   console.log(user);
-        //   // if (!dbUser.roles) {
-        //   //   dbUser.roles = {};
-        //   // }
-        //   const authUser = {
-        //     uid: user.uid,
-        //     ...dbUser,
-        //   };
-        //   console.log(`You have logged in as ${authUser.username}`);
-        //   console.log(dbUser);
-        //   setCurrentUser(authUser);
-        // });
+        console.log(authUser);
+        if (!authUser.emailVerified && authUser.providerData[0].providerId !== "facebook.com") {
+          signOut(auth);
+          return alert("Please verify your email");
+        }
+        console.log(authUser.uid);
         const dbUserRef = databaseCtx.getSingleUser(authUser.uid);
         onValue(dbUserRef, (snapshot) => {
           const dbUser = snapshot.val();
+          console.log("dbUser useEffect", dbUser);
+
           if (!dbUser.roles) {
             dbUser.roles = {};
           }
 
           authUser = {
             uid: authUser.uid,
+            emailVerified: authUser.emailVerified,
+            providerData: authUser.providerData,
             ...dbUser,
           };
 
-          localStorage.setItem("authUser", JSON.stringify(authUser)); // this is to prevent flickering. Awful user experience!
-
+          localStorage.setItem("authUser", JSON.stringify(authUser)); // this is to prevent flickering.
           setCurrentUser(authUser);
           console.log(`You have been signed in as ${authUser.username}`);
         });
@@ -107,7 +110,7 @@ export const AuthContextProvider = (props) => {
       }
     });
     return unsubscribe; // this is a method that we call in order to remove the listener onAuthStateChanged after it runs, so that we can attach a new listener
-  }, [databaseCtx]);
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -123,6 +126,7 @@ export const AuthContextProvider = (props) => {
         signInWithGoogle,
         signInWithFacebook,
         signInWithTwitter,
+        verifyUsersEmail,
       }}>
       {props.children}
     </AuthContext.Provider>

@@ -1,6 +1,7 @@
 import React, { useRef, useContext, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
+import DBContext from "../contexts/DBContext";
 import { auth } from "../Firebase/firebase";
 import {} from "firebase/auth";
 
@@ -9,6 +10,7 @@ import { SIGN_IN } from "../../constants/routes";
 //  Find a better way to disable button and handle errors so it doesnt cause an error. Try the useEffect as suggested
 const PasswordForgetPage = () => {
   const authCtx = useContext(AuthContext);
+  const databaseCtx = useContext(DBContext);
   const emailRef = useRef();
 
   const navigate = useNavigate();
@@ -43,6 +45,7 @@ const PasswordForgetPage = () => {
   const deleteAccountHandler = async () => {
     try {
       await authCtx.deleteAccount(auth.currentUser);
+      databaseCtx.deleteUser(auth.currentUser.uid);
       console.log(`User deleted ${auth.currentUser.email}`);
     } catch (error) {
       if (error.code === "auth/requires-recent-login") {
