@@ -1,11 +1,8 @@
 import React, { useRef, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
 import DBContext from "../contexts/DBContext";
 import { auth } from "../Firebase/firebase";
 
-import { sendEmailVerification } from "firebase/auth";
-import { HOME } from "../../constants/routes";
 import { ADMIN } from "../../constants/roles";
 const ERROR_CODE_ACCOUNT_EXISTS = "auth/account-exists-with-different-credential";
 const ERROR_MSG_ACCOUNT_EXISTS = `
@@ -23,8 +20,6 @@ const SignUpPage = () => {
   const passwordConfirmationRef = useRef();
   const nameRef = useRef();
   const isAdminRef = useRef();
-
-  const navigate = useNavigate();
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -60,9 +55,9 @@ const SignUpPage = () => {
 
       // Write also the signed up user in the database so we can have access to them
       DatabaseCtx.writeUserData(userCredentials.user.uid, fullName, email, roles);
-      console.log(roles);
       setLoading(false);
-      navigate(HOME, { replace: true }); // replace:true means redirect instead of a push [no more useHistory in react router v6]. You can alos pass in numbers to navigate(-1) --> one page back/ navigate(2) ---> two pages forward. Redirecting programmatically
+      // navigate(VERIFY_EMAIL);
+      //navigate(HOME, { replace: true }); // replace:true means redirect instead of a push [no more useHistory in react router v6]. You can alos pass in numbers to navigate(-1) --> one page back/ navigate(2) ---> two pages forward. Redirecting programmatically
       // console.log("currentUser signed in", authCtx.currentUser);
       // console.log("userCredentials", userCredentials);
     } catch (error) {

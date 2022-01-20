@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
 import DBContext from "../contexts/DBContext";
 import { HOME } from "../../constants/routes";
-import { getRoles } from "@testing-library/react";
 
 const SignInWithGoogle = () => {
   const [error, setError] = useState(null);

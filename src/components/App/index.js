@@ -1,6 +1,15 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { ACCOUNT, ADMIN, SIGN_UP, SIGN_IN, LANDING, HOME, PASSWORD_FORGET } from "../../constants/routes";
+import {
+  ACCOUNT,
+  ADMIN,
+  SIGN_UP,
+  SIGN_IN,
+  LANDING,
+  HOME,
+  PASSWORD_FORGET,
+  VERIFY_EMAIL,
+} from "../../constants/routes";
 // import * as Routes from "../../constants/routes"; you coul also do this, since exports are not as defautlt * say import everything in an object name Routes
 import LandingPage from "../Landing/index";
 import SignUpPage from "../SignUp/index";
@@ -10,9 +19,11 @@ import HomePage from "../Home/index";
 import AccountPage from "../Account/index";
 import AdminPage from "../Admin/index";
 import Navigation from "../Navigation";
+import VerifyEmailPage from "../VerifyEmailPage/VerifyEmailPage";
 
 import ProtectedRoute from "../ProtectedRoutes/ProtectedRoute";
 import IsUserAuthenticated from "../ProtectedRoutes/IsUserAuthenticated";
+import IsUserEmailVerified from "../ProtectedRoutes/isUserEmailVerified";
 
 //SDK stands for Software development kit
 
@@ -28,6 +39,14 @@ const App = () => {
       <hr />
       {/* Navigation contains <Link/> components that point to="/a-path". Once clicked Route component sbelow render a certain page that matches that path */}
       <Routes>
+        <Route
+          path={VERIFY_EMAIL}
+          element={
+            <IsUserEmailVerified>
+              <VerifyEmailPage />
+            </IsUserEmailVerified>
+          }
+        />
         <Route path={LANDING} element={<LandingPage />} />
         <Route
           path={SIGN_UP}

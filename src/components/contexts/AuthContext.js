@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { auth, googleProvider, facebookProvider, twitterProvider } from "../Firebase/firebase";
+import { VERIFY_EMAIL } from "../../constants/routes";
 import DBContext from "./DBContext";
 import {
   onAuthStateChanged,
@@ -32,6 +34,8 @@ const AuthContext = React.createContext({
 export const AuthContextProvider = (props) => {
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("authUser")));
   const databaseCtx = useContext(DBContext);
+
+  const navigate = useNavigate();
 
   const signUp = (auth, email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -81,22 +85,21 @@ export const AuthContextProvider = (props) => {
         console.log(authUser);
         if (!authUser.emailVerified && authUser.providerData[0].providerId !== "facebook.com") {
           signOut(auth);
-          return alert("Please verify your email");
+          alert("Please verify your email");
+          return navigate(VERIFY_EMAIL);
         }
-        console.log(authUser.uid);
         const dbUserRef = databaseCtx.getSingleUser(authUser.uid);
         onValue(dbUserRef, (snapshot) => {
           const dbUser = snapshot.val();
-          console.log("dbUser useEffect", dbUser);
 
           if (!dbUser.roles) {
             dbUser.roles = {};
           }
-
           authUser = {
             uid: authUser.uid,
             emailVerified: authUser.emailVerified,
             providerData: authUser.providerData,
+            providerId: authUser.providerData[0].providerId,
             ...dbUser,
           };
 

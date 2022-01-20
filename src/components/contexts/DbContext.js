@@ -1,7 +1,7 @@
 import React from "react";
 
 import { db } from "../Firebase/firebase";
-import { set, ref, get, child } from "firebase/database";
+import { set, ref } from "firebase/database";
 
 const DBContext = React.createContext({
   writeUserData: () => {},
@@ -27,7 +27,7 @@ export const DBContextProvider = (props) => {
   };
 
   const deleteUser = (uid) => {
-    const user = ref(db, `users/${uid}`).remove();
+    ref(db, `users/${uid}`).remove();
   };
 
   // const getSingleUser = (uid) => {
