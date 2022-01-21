@@ -40,6 +40,9 @@ export const DBContextProvider = (props) => {
     return user;
   };
 
+  const message = (uid) => ref(db, `messages/${uid}`); // This is an equivalent of an API endpoint, to read,write,update and delete a message
+  const messages = (uid) => ref(db, "messages"); // This endpoint is used  to read all the messages and create a message
+
   return (
     <DBContext.Provider value={{ writeUserData, readAllUsers, getSingleUser, deleteUser }}>
       {props.children}
