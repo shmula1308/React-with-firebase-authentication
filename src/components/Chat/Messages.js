@@ -16,6 +16,7 @@ const Messages = () => {
     const messagesRef = databaseCtx.readAllMessages();
     const subscribe = onValue(messagesRef, (snapshot) => {
       const messagesObj = snapshot.val();
+
       if (messagesObj) {
         const messages = Object.keys(messagesObj).map((key) => ({ ...messagesObj[key], uid: key }));
         setMessages(messages);
@@ -35,10 +36,18 @@ const Messages = () => {
     databaseCtx.updateMessages(userId, text);
   };
 
+  const onRemoveMessage = (uid) => {
+    databaseCtx.removeMessage(uid);
+  };
+
   return (
     <div>
       {isLoading && <p>Loading...</p>}
-      {messages ? <MessageList messages={messages} /> : <p>There are no messages...</p>}
+      {messages ? (
+        <MessageList messages={messages} onRemoveMessage={onRemoveMessage} />
+      ) : (
+        <p>There are no messages...</p>
+      )}
       <form onSubmit={onCreateMessageHandler}>
         <input type='text' ref={messageRef} />
         <button type='submit'>Send</button>

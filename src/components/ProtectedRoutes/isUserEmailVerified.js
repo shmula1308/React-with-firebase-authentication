@@ -10,7 +10,7 @@ const IsUserEmailVerified = (props) => {
   console.log(authCtx.currentUser);
 
   useEffect(() => {
-    if (authCtx.currentUser.emailVerified) {
+    if (authCtx.currentUser && authCtx.currentUser.emailVerified) {
       return navigate(LANDING, { replace: true });
     }
   }, [authCtx.currentUser, navigate]);

@@ -100,7 +100,7 @@ const SignUpPage = () => {
         <button disabled={loading} type='submit'>
           Sign Up
         </button>
-        {error && <div>{error}</div>}
+        {/* {error && <div>{error}</div>} */}
       </form>
     </div>
   );

@@ -44,7 +44,7 @@ const PasswordForgetPage = () => {
 
   const deleteAccountHandler = async () => {
     try {
-      await authCtx.deleteAccount(auth.currentUser);
+      authCtx.deleteAccount(auth.currentUser);
       databaseCtx.deleteUser(auth.currentUser.uid);
       console.log(`User deleted ${auth.currentUser.email}`);
     } catch (error) {
