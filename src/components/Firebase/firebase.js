@@ -17,7 +17,7 @@ const firebaseConfig = {
 };
 
 export const firebaseApp = initializeApp(firebaseConfig); // firebase instance that stores the firbase configuarion. This instance knows how to connect to your specific firebase backend
-export const auth = getAuth(firebaseApp); // username and passwort authentication
+export const auth = getAuth(firebaseApp); // username and password authentication
 export const googleProvider = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();
 export const twitterProvider = new TwitterAuthProvider();
