@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import AuthContext from "../contexts/AuthContext";
 import DBContext from "../contexts/DBContext";
 import MessageList from "./MessageList";
-import { onValue } from "firebase/database";
+import { onValue, serverTimestamp } from "firebase/database";
 
 const Messages = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,18 +33,29 @@ const Messages = () => {
     ev.preventDefault();
     const userId = authCtx.currentUser.uid;
     const text = messageRef.current.value;
-    databaseCtx.updateMessages(userId, text);
+    databaseCtx.addNewMessage(userId, text);
   };
 
   const onRemoveMessage = (uid) => {
     databaseCtx.removeMessage(uid);
   };
 
+  const onEditMessage = (message, text) => {
+    const { uid, ...messageSnapshot } = message;
+
+    console.log(messageSnapshot, uid);
+    databaseCtx.updateMessage(uid, {
+      ...messageSnapshot,
+      text,
+      editedAt: serverTimestamp(),
+    });
+  };
+
   return (
     <div>
       {isLoading && <p>Loading...</p>}
       {messages ? (
-        <MessageList messages={messages} onRemoveMessage={onRemoveMessage} />
+        <MessageList messages={messages} onRemoveMessage={onRemoveMessage} onEditMessage={onEditMessage} />
       ) : (
         <p>There are no messages...</p>
       )}

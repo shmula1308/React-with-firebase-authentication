@@ -1,7 +1,7 @@
 import React from "react";
 
 import { db } from "../Firebase/firebase";
-import { set, ref, push, remove } from "firebase/database";
+import { set, ref, push, remove, serverTimestamp } from "firebase/database";
 
 const DBContext = React.createContext({
   writeUserData: () => {},
@@ -9,8 +9,9 @@ const DBContext = React.createContext({
   getSingleUser: () => {},
   deleteUser: () => {},
   readAllMessages: () => {},
-  updateMessages: () => {},
+  addNewMessage: () => {},
   removeMessage: () => {},
+  updateMessage: () => {},
 });
 
 export const DBContextProvider = (props) => {
@@ -30,7 +31,7 @@ export const DBContextProvider = (props) => {
   };
 
   const deleteUser = (uid) => {
-    remove(ref(db, `users/${uid}`)); // fucking hell this almost drove me nuts
+    remove(ref(db, `users/${uid}`)); // fucking hell this almost drove me nuts. Next you have to figure out how and whether you should also remove all messages associated to the deleted user
   };
 
   // const getSingleUser = (uid) => {
@@ -49,14 +50,19 @@ export const DBContextProvider = (props) => {
     return ref(db, "messages");
   };
 
-  const updateMessages = (userId, text) => {
+  const addNewMessage = (userId, text) => {
     // Create a new message reference with an auto-generated id
     const messageListRef = ref(db, "messages");
     const newMessageRef = push(messageListRef);
     set(newMessageRef, {
       userId,
       text,
+      createdAt: serverTimestamp(),
     });
+  };
+
+  const updateMessage = (uid, editedMessage) => {
+    set(ref(db, "messages/" + uid), editedMessage);
   };
 
   const removeMessage = (uid) => {
@@ -82,8 +88,9 @@ export const DBContextProvider = (props) => {
         getSingleUser,
         deleteUser,
         readAllMessages,
-        updateMessages,
+        addNewMessage,
         removeMessage,
+        updateMessage,
       }}>
       {props.children}
     </DBContext.Provider>
