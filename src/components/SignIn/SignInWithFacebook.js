@@ -24,7 +24,7 @@ const SignInWithFacebook = () => {
     try {
       const socialAuthUser = await authCtx.signInWithFacebook();
 
-      authCtx.verifyUsersEmail(); // with facebook email is unverified. With google it is out of the box
+      // authCtx.verifyUsersEmail(); // with facebook email is unverified. With google it is out of the box
       // The signed-in user info.
       const user = socialAuthUser.user;
       // This gives you a Facebook Access Token. You can use it to access the Facebook API.

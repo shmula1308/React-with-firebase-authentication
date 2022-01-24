@@ -82,7 +82,7 @@ export const AuthContextProvider = (props) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
-        console.log(authUser);
+        console.log(authUser.emailVerified);
         if (!authUser.emailVerified && authUser.providerData[0].providerId !== "facebook.com") {
           signOut(auth);
           alert("Please verify your email");
