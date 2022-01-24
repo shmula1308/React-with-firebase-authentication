@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { getDatabase } from "firebase/database";
+import { getStorage } from "firebase/storage";
 
 // Importing firebase services. Each firebase service followes a similar pattern
 // Import service from its path. Import service getter function. Each subpackage has a getter function, But you must initialize your firebase app first before calling any service getter function.
@@ -21,7 +22,10 @@ export const auth = getAuth(firebaseApp); // username and password authenticatio
 export const googleProvider = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();
 export const twitterProvider = new TwitterAuthProvider();
+
 export const db = getDatabase(firebaseApp); // To read or write data from the database, you need an instance of firebase.database.Reference
+
+const storage = getStorage(firebaseApp);
 
 // Learn about security rules and app check
 // here --> https://firebase.google.com/docs/rules
@@ -43,3 +47,6 @@ export const db = getDatabase(firebaseApp); // To read or write data from the da
 //     console.log("no user");
 //   }
 // });
+
+//recaptcha v3 site key 6LepZTEeAAAAAFIAi8SgaCjBf5S5DTb7jhkUFRxn
+//secret key 6LepZTEeAAAAAGBSO3mRpIQoUdNKxdl3rE09mww_

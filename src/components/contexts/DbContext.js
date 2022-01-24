@@ -1,7 +1,7 @@
 import React from "react";
 
 import { db } from "../Firebase/firebase";
-import { set, ref, push, remove, serverTimestamp } from "firebase/database";
+import { set, ref, push, remove, serverTimestamp, query, orderByValue, limitToLast } from "firebase/database";
 
 const DBContext = React.createContext({
   writeUserData: () => {},
@@ -47,7 +47,7 @@ export const DBContextProvider = (props) => {
   const message = (uid) => ref(db, `messages/${uid}`); //not being used here currently
   // This endpoint is used  to read all the messages and create a message
   const readAllMessages = () => {
-    return ref(db, "messages");
+    return query(ref(db, "messages"), limitToLast(3));
   };
 
   const addNewMessage = (userId, text) => {

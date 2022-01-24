@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import AuthContext from "../contexts/AuthContext";
 
 const MessageItem = ({ message, onRemoveMessage, onEditMessage }) => {
   const [messageEdit, setMessageEdit] = useState({
     editMode: false,
     editText: message.text,
   });
+  const authCtx = useContext(AuthContext);
+  const { currentUser } = authCtx;
 
   const onToggleEditMode = () => {
     setMessageEdit((prevState) => {
@@ -48,22 +51,25 @@ const MessageItem = ({ message, onRemoveMessage, onEditMessage }) => {
         </span>
       )}
       {message.editedAt && <span>(Edited)</span>}
-
-      {!editMode && (
-        <button
-          onClick={() => {
-            onRemoveMessage(message.uid);
-          }}>
-          Delete
-        </button>
-      )}
-      {editMode ? (
+      {currentUser.uid === message.userId && (
         <span>
-          <button onClick={onSaveEditText}>Save</button>
-          <button onClick={onToggleEditMode}>Reset</button>
+          {!editMode && (
+            <button
+              onClick={() => {
+                onRemoveMessage(message.uid);
+              }}>
+              Delete
+            </button>
+          )}
+          {editMode ? (
+            <span>
+              <button onClick={onSaveEditText}>Save</button>
+              <button onClick={onToggleEditMode}>Reset</button>
+            </span>
+          ) : (
+            <button onClick={onToggleEditMode}>Edit</button>
+          )}
         </span>
-      ) : (
-        <button onClick={onToggleEditMode}>Edit</button>
       )}
     </li>
   );
