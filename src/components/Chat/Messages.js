@@ -6,6 +6,7 @@ import { onValue, serverTimestamp } from "firebase/database";
 
 const Messages = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [numberOfMsg, setNumberOfMsg] = useState(5);
   const messageRef = useRef();
   const [messages, setMessages] = useState([]);
   const databaseCtx = useContext(DBContext);
@@ -13,13 +14,17 @@ const Messages = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    const messagesRef = databaseCtx.readAllMessages();
-    const subscribe = onValue(messagesRef, (snapshot) => {
-      const messagesObj = snapshot.val();
-
-      if (messagesObj) {
-        const messages = Object.keys(messagesObj).map((key) => ({ ...messagesObj[key], uid: key }));
-        setMessages(messages);
+    const messagesCollection = databaseCtx.readAllMessages(numberOfMsg);
+    const subscribe = onValue(messagesCollection, (snapshot) => {
+      if (snapshot.val()) {
+        const messages = [];
+        // using forEach method on snapshot is the only way to apporach this. Because snapshot.val() return an object which does not keep the sorting specified in the query. So orderByChild() will not work.
+        snapshot.forEach((childSnapshot) => {
+          const childKey = childSnapshot.key;
+          const childData = childSnapshot.val();
+          messages.push({ uid: childKey, ...childData }); // ascending order, when we define orderByChild("text")
+        });
+        setMessages(messages); // use reverse() method on array to change to (descending)
         setIsLoading(false);
       } else {
         setMessages(null);
@@ -27,7 +32,7 @@ const Messages = () => {
       }
     });
     return subscribe;
-  }, [databaseCtx]);
+  }, [databaseCtx, numberOfMsg]);
 
   const onCreateMessageHandler = (ev) => {
     ev.preventDefault();
@@ -51,6 +56,17 @@ const Messages = () => {
     });
   };
 
+  const onShowMoreMessages = () => {
+    setNumberOfMsg((prevState) => {
+      return prevState + 5;
+    });
+  };
+  const onShowLessMessages = () => {
+    setNumberOfMsg((prevState) => {
+      return prevState - 5 > 0 ? prevState - 5 : 5;
+    });
+  };
+
   return (
     <div>
       {isLoading && <p>Loading...</p>}
@@ -58,6 +74,16 @@ const Messages = () => {
         <MessageList messages={messages} onRemoveMessage={onRemoveMessage} onEditMessage={onEditMessage} />
       ) : (
         <p>There are no messages...</p>
+      )}
+      {!isLoading && messages && (
+        <span>
+          <button type='button' onClick={onShowMoreMessages}>
+            More
+          </button>
+          <button type='button' onClick={onShowLessMessages}>
+            Less
+          </button>
+        </span>
       )}
       <form onSubmit={onCreateMessageHandler}>
         <input type='text' ref={messageRef} />

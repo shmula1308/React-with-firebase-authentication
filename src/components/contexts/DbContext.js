@@ -1,7 +1,19 @@
 import React from "react";
 
 import { db } from "../Firebase/firebase";
-import { set, ref, push, remove, serverTimestamp, query, orderByValue, limitToLast } from "firebase/database";
+import {
+  set,
+  ref,
+  push,
+  remove,
+  serverTimestamp,
+  query,
+  orderByChild,
+  limitToLast,
+  limitToFirst,
+  startAt,
+  equalTo,
+} from "firebase/database";
 
 const DBContext = React.createContext({
   writeUserData: () => {},
@@ -46,14 +58,15 @@ export const DBContextProvider = (props) => {
   // This is an equivalent of an API endpoint, to read,write,update and delete a message
   const message = (uid) => ref(db, `messages/${uid}`); //not being used here currently
   // This endpoint is used  to read all the messages and create a message
-  const readAllMessages = () => {
-    return query(ref(db, "messages"), limitToLast(3));
+
+  const readAllMessages = (num) => {
+    return query(ref(db, "messages"), orderByChild("createdAt"), limitToFirst(num)); // sorting is expensive. Therefore I have specified rules in server side. ".indexOn". You dont have to specify these rules in development. You can pass as many query functions to query, such as limitToLast(), startAt() etc so you get a combination if you need to
   };
 
   const addNewMessage = (userId, text) => {
     // Create a new message reference with an auto-generated id
     const messageListRef = ref(db, "messages");
-    const newMessageRef = push(messageListRef);
+    const newMessageRef = push(messageListRef); // push method creates a new auto generated key. newMessageRef has a .key property
     set(newMessageRef, {
       userId,
       text,
