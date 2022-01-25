@@ -15,6 +15,7 @@ const Messages = () => {
   useEffect(() => {
     setIsLoading(true);
     const messagesCollection = databaseCtx.readAllMessages(numberOfMsg);
+
     const subscribe = onValue(messagesCollection, (snapshot) => {
       if (snapshot.val()) {
         const messages = [];

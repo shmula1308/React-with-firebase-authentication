@@ -60,7 +60,7 @@ export const DBContextProvider = (props) => {
   // This endpoint is used  to read all the messages and create a message
 
   const readAllMessages = (num) => {
-    return query(ref(db, "messages"), orderByChild("createdAt"), limitToFirst(num)); // sorting is expensive. Therefore I have specified rules in server side. ".indexOn". You dont have to specify these rules in development. You can pass as many query functions to query, such as limitToLast(), startAt() etc so you get a combination if you need to
+    return query(ref(db, "messages"), orderByChild("createdAt"), limitToLast(num)); // sorting is expensive. Therefore I have specified rules in server side. ".indexOn". You dont have to specify these rules in development. You can pass as many query functions to query, such as limitToLast(), startAt() etc so you get a combination if you need to
   };
 
   const addNewMessage = (userId, text) => {

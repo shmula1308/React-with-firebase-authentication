@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react/cjs/react.development";
+import React, { useState } from "react";
 
 const DefaultLoginToggle = ({ onlyOneLeft, isEnabled, signInMethod, onLink, onUnlink }) => {
   // let initialState = { passwordOne: "", passwordTwo: "" };

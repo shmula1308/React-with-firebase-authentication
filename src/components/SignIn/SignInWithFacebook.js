@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FacebookAuthProvider } from "firebase/auth";
-import { auth } from "../Firebase/firebase";
 import AuthContext from "../contexts/AuthContext";
 import DBContext from "../contexts/DBContext";
 import { HOME } from "../../constants/routes";
